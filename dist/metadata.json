@@ -1,1 +1,1 @@
-{"project_name":"terraform-provider-securden","tag":"v0.1.0","previous_tag":"","version":"0.1.0","commit":"8b2941cb75a34093aed075a35d2172031f8c8db5","date":"2024-10-11T17:11:08.2869942+05:30","runtime":{"goos":"windows","goarch":"amd64"}}
+{"project_name":"terraform-provider-securden","tag":"v0.1.0","previous_tag":"","version":"0.1.0","commit":"b09a699ebc7d2edb9f0441b7dbb4c2e943be3147","date":"2024-10-11T17:17:47.9160933+05:30","runtime":{"goos":"windows","goarch":"amd64"}}
