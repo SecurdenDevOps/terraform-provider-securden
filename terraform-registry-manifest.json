@@ -1,0 +1,20 @@
+{
+  "version": "0.1.0",
+  "platforms": [
+    {
+      "os": "darwin",
+      "arch": "amd64",
+      "filename": "terraform-provider-securden_darwin_amd64"
+    },
+    {
+      "os": "linux",
+      "arch": "amd64",
+      "filename": "terraform-provider-securden_linux_amd64"
+    },
+    {
+      "os": "windows",
+      "arch": "amd64",
+      "filename": "terraform-provider-securden_windows_amd64.exe"
+    }
+  ]
+}
