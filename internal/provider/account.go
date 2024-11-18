@@ -107,9 +107,6 @@ func (d *SecurdenDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"account_file": schema.StringAttribute{
 				Computed: true,
 			},
-			"port": schema.StringAttribute{
-				Computed: true,
-			},
 			"oracle_sid": schema.StringAttribute{
 				Computed: true,
 			},
@@ -117,6 +114,9 @@ func (d *SecurdenDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Computed: true,
 			},
 			"default_database": schema.StringAttribute{
+				Computed: true,
+			},
+			"port": schema.StringAttribute{
 				Computed: true,
 			},
 		},

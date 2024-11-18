@@ -62,6 +62,7 @@ func (p *securdenProvider) Resources(_ context.Context) []func() resource.Resour
 func (p *securdenProvider) DataSources(_ context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		account_data_source,
+		accounts_passwords_source,
 	}
 }
 
