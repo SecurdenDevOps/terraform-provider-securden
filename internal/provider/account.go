@@ -43,7 +43,7 @@ type SecurdenDataSourceModel struct {
 }
 
 func (d *SecurdenDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_keyvalue"
+	resp.TypeName = req.ProviderTypeName + "_account"
 }
 
 func (d *SecurdenDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
