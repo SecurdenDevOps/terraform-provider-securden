@@ -36,11 +36,13 @@ func (p *securdenProvider) Schema(_ context.Context, _ provider.SchemaRequest, r
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"authtoken": schema.StringAttribute{
-				Required:  true,
-				Sensitive: true,
+				Required:            true,
+				Sensitive:           true,
+				MarkdownDescription: "Securden API Authentication Token",
 			},
 			"server_url": schema.StringAttribute{
-				Required: true,
+				Required:            true,
+				MarkdownDescription: "Securden Server URL. Example: https://example.securden.com:5959",
 			},
 		},
 	}

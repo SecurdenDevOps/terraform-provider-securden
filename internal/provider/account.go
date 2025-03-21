@@ -71,53 +71,64 @@ func (d *SecurdenDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Computed:            true,
 			},
 			"key_field": schema.StringAttribute{
-				MarkdownDescription: "Key field for the required field",
+				MarkdownDescription: "Key field for the required additional field",
 				Optional:            true,
 			},
 			"key_value": schema.StringAttribute{
-				MarkdownDescription: "Key value of the required field",
+				MarkdownDescription: "Value of the additional field",
 				Computed:            true,
 			},
 			"private_key": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "Private Key of the account",
 			},
 			"putty_private_key": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "PuTTY Private Key of the account",
 			},
 			"passphrase": schema.StringAttribute{
-				MarkdownDescription: "Passphrase for Private Key",
+				MarkdownDescription: "Passphrase of the Private Key",
 				Computed:            true,
 			},
 			"ppk_passphrase": schema.StringAttribute{
-				MarkdownDescription: "Passphrase for PuTTY Private Key",
+				MarkdownDescription: "Passphrase of the PuTTY Private Key",
 				Computed:            true,
 			},
 			"address": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "Address of the account",
 			},
 			"client_id": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "Client ID of the account",
 			},
 			"client_secret": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "Client Secret of the account",
 			},
 			"account_alias": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "Required for AWS IAM Account",
 			},
 			"account_file": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "File Content of the account",
 			},
 			"oracle_sid": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "Oracle SID of the account",
 			},
 			"oracle_service_name": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "Oracle Service Name of the account",
 			},
 			"default_database": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "Default Database of the account",
 			},
 			"port": schema.StringAttribute{
-				Computed: true,
+				Computed:            true,
+				MarkdownDescription: "Account Port",
 			},
 		},
 	}

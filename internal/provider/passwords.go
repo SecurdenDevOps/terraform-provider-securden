@@ -36,12 +36,13 @@ func (d *SecurdenPasswords) Schema(ctx context.Context, req datasource.SchemaReq
 		Attributes: map[string]schema.Attribute{
 			"account_ids": schema.ListAttribute{ // New list attribute
 				ElementType:         types.StringType,
-				MarkdownDescription: "List of account ids",
+				MarkdownDescription: "List of account IDs needs to be fetched",
 				Required:            true,
 			},
 			"passwords": schema.MapAttribute{
-				ElementType: types.StringType, // Using StringAttribute directly
-				Computed:    true,
+				ElementType:         types.StringType, // Using StringAttribute directly
+				Computed:            true,
+				MarkdownDescription: "Multiple accounts passwords with account ID as key and value will be account password",
 			},
 		},
 	}
