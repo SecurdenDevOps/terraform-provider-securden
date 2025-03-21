@@ -105,13 +105,16 @@ Here are some examples of how to access various credentials from the Securden da
 
 ## 5. Accessing Additional Fields
 
-If your account type has additional fields in Securden, you can retrieve the value of additional fields by specifying a `key_field` and `key_value`:
+If your account type has additional fields in Securden, you can retrieve the value of additional fields by specifying a `key_field` as additional field name and access the data by `key_value`:
 
 ```hcl
 data "securden_keyvalue" "ssh" {
   account_id = "2000000002800"
-  key_field  = "custom_field"
-  key_value  = "field_value"
+  key_field  = "<additional_field_name>"
+}
+
+output "Additional_field_data"{
+    value = data.securden_keyvalue.ssh.key_value
 }
 ```
 
