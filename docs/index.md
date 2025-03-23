@@ -114,7 +114,7 @@ data "securden_keyvalue" "ssh" {
 }
 
 output "Additional_field_data"{
-    value = data.securden_keyvalue.ssh.key_value
+  value = data.securden_keyvalue.ssh.key_value
 }
 ```
 
@@ -161,7 +161,7 @@ data "securden_passwords" "passwords" {
 }
 ```
 
-To retrieve the password of a specific account:
+To access the password of a specific account:
 
 ```hcl
 output "password" {
