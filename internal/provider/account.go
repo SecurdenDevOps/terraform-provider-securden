@@ -10,137 +10,69 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-var _ datasource.DataSource = &SecurdenDataSource{}
+var _ datasource.DataSource = &Account{}
 
-func account_data_source() datasource.DataSource {
-	return &SecurdenDataSource{}
+func account() datasource.DataSource {
+	return &Account{}
 }
 
-type SecurdenDataSource struct {
+type Account struct {
 	client *http.Client
 }
 
-type SecurdenDataSourceModel struct {
-	AccountID         types.Int64  `tfsdk:"account_id"`
-	AccountName       types.String `tfsdk:"account_name"`
-	AccountTitle      types.String `tfsdk:"account_title"`
-	Password          types.String `tfsdk:"password"`
-	KeyField          types.String `tfsdk:"key_field"`
-	KeyValue          types.String `tfsdk:"key_value"`
-	PrivateKey        types.String `tfsdk:"private_key"`
-	PuTTYPrivateKey   types.String `tfsdk:"putty_private_key"`
-	Passphrase        types.String `tfsdk:"passphrase"`
-	PPKPassphrase     types.String `tfsdk:"ppk_passphrase"`
-	Address           types.String `tfsdk:"address"`
-	ClientID          types.String `tfsdk:"client_id"`
-	ClientSecret      types.String `tfsdk:"client_secret"`
-	AccountAlias      types.String `tfsdk:"account_alias"`
-	AccountFile       types.String `tfsdk:"account_file"`
-	OracleSID         types.String `tfsdk:"oracle_sid"`
-	OracleServiceName types.String `tfsdk:"oracle_service_name"`
-	DefaultDatabase   types.String `tfsdk:"default_database"`
-	Port              types.String `tfsdk:"port"`
+type AccountModel struct {
+	AccountID    types.Int64  `tfsdk:"account_id"`
+	AccountName  types.String `tfsdk:"account_name"`
+	AccountTitle types.String `tfsdk:"account_title"`
+	AccountType  types.String `tfsdk:"account_type"`
+	Account      types.Map    `tfsdk:"account"`
 }
 
-func (d *SecurdenDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *Account) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_account"
 }
 
-func (d *SecurdenDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *Account) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Securden data source",
+		MarkdownDescription: "Retrieves account details from Securden.",
 
 		Attributes: map[string]schema.Attribute{
 			"account_id": schema.Int64Attribute{
-				MarkdownDescription: "ID of the account",
 				Optional:            true,
 				Computed:            true,
+				MarkdownDescription: "Unique identifier of the account.",
 			},
 			"account_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the account",
 				Optional:            true,
 				Computed:            true,
+				MarkdownDescription: "The name associated with the account.",
 			},
 			"account_title": schema.StringAttribute{
-				MarkdownDescription: "Title of the account",
 				Optional:            true,
 				Computed:            true,
+				MarkdownDescription: "Title or designation of the account.",
 			},
-			"password": schema.StringAttribute{
-				MarkdownDescription: "Password of the account",
-				Computed:            true,
-			},
-			"key_field": schema.StringAttribute{
-				MarkdownDescription: "Key field for the required additional field",
+			"account_type": schema.StringAttribute{
 				Optional:            true,
-			},
-			"key_value": schema.StringAttribute{
-				MarkdownDescription: "Value of the additional field",
 				Computed:            true,
+				MarkdownDescription: "Specifies the type or category of the account.",
 			},
-			"private_key": schema.StringAttribute{
+			"account": schema.MapAttribute{
+				ElementType:         types.StringType,
 				Computed:            true,
-				MarkdownDescription: "Private Key of the account",
-			},
-			"putty_private_key": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "PuTTY Private Key of the account",
-			},
-			"passphrase": schema.StringAttribute{
-				MarkdownDescription: "Passphrase of the Private Key",
-				Computed:            true,
-			},
-			"ppk_passphrase": schema.StringAttribute{
-				MarkdownDescription: "Passphrase of the PuTTY Private Key",
-				Computed:            true,
-			},
-			"address": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "Address of the account",
-			},
-			"client_id": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "Client ID of the account",
-			},
-			"client_secret": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "Client Secret of the account",
-			},
-			"account_alias": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "Required for AWS IAM Account",
-			},
-			"account_file": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "File Content of the account",
-			},
-			"oracle_sid": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "Oracle SID of the account",
-			},
-			"oracle_service_name": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "Oracle Service Name of the account",
-			},
-			"default_database": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "Default Database of the account",
-			},
-			"port": schema.StringAttribute{
-				Computed:            true,
-				MarkdownDescription: "Account Port",
+				MarkdownDescription: "A map containing account attributes as keys and their corresponding values.",
 			},
 		},
 	}
 }
 
-func (d *SecurdenDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (d *Account) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
 	client, ok := req.ProviderData.(*http.Client)
 	if !ok {
-		resp.Diagnostics.AddError(
+		resp.Diagnostics.AddWarning(
 			"Unexpected Data Source Configure Type",
 			fmt.Sprintf("Expected *http.Client, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
@@ -149,31 +81,45 @@ func (d *SecurdenDataSource) Configure(ctx context.Context, req datasource.Confi
 	d.client = client
 }
 
-func (d *SecurdenDataSource) Create(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var account SecurdenDataSourceModel
+func (d *Account) Create(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var account AccountModel
 	resp.Diagnostics.Append(req.Config.Get(ctx, &account)...)
-	account_id := account.AccountID.String()
+	var account_id int64
+	account_id = 0
+	if !account.AccountID.IsNull() {
+		account_id = account.AccountID.ValueInt64()
+	}
 	account_name := account.AccountName.ValueString()
 	account_title := account.AccountTitle.ValueString()
-	account_field := account.KeyField.ValueString()
-	data, code, message := get_account(ctx, account_id, account_name, account_title, account_field)
+	account_type := account.AccountType.ValueString()
+	var data AccountModel
+	var code int
+	var message string
+	data, code, message = get_account(ctx, account_id, account_name, account_title, account_type)
 	if code != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("%d - %s", code, message), "")
+		resp.Diagnostics.AddWarning(fmt.Sprintf("%d - %s", code, message), "")
 		return
 	}
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (d *SecurdenDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var account SecurdenDataSourceModel
+func (d *Account) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var account AccountModel
 	resp.Diagnostics.Append(req.Config.Get(ctx, &account)...)
-	account_id := account.AccountID.String()
+	var account_id int64
+	account_id = 0
+	if !account.AccountID.IsNull() {
+		account_id = account.AccountID.ValueInt64()
+	}
 	account_name := account.AccountName.ValueString()
 	account_title := account.AccountTitle.ValueString()
-	account_field := account.KeyField.ValueString()
-	data, code, message := get_account(ctx, account_id, account_name, account_title, account_field)
+	account_type := account.AccountType.ValueString()
+	var data AccountModel
+	var code int
+	var message string
+	data, code, message = get_account(ctx, account_id, account_name, account_title, account_type)
 	if code != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("%d - %s", code, message), "")
+		resp.Diagnostics.AddWarning(fmt.Sprintf("%d - %s", code, message), "")
 		return
 	}
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
