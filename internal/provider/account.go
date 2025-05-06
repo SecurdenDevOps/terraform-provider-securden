@@ -25,6 +25,8 @@ type AccountModel struct {
 	AccountName  types.String `tfsdk:"account_name"`
 	AccountTitle types.String `tfsdk:"account_title"`
 	AccountType  types.String `tfsdk:"account_type"`
+	TicketID     types.String `tfsdk:"ticket_id"`
+	Reason 		 types.String `tfsdk:"reason"`
 	Account      types.Map    `tfsdk:"account"`
 }
 
@@ -56,6 +58,14 @@ func (d *Account) Schema(ctx context.Context, req datasource.SchemaRequest, resp
 				Optional:            true,
 				Computed:            true,
 				MarkdownDescription: "Specifies the type or category of the account.",
+			},
+			"ticket_id": schema.StringAttribute{
+				Optional:            true,
+				MarkdownDescription: "Specifies the type or category of the account.",
+			},
+			"reason": schema.StringAttribute{
+				Optional:            true,
+				MarkdownDescription: "Reason for fetching account.",
 			},
 			"account": schema.MapAttribute{
 				ElementType:         types.StringType,
@@ -92,10 +102,19 @@ func (d *Account) Create(ctx context.Context, req datasource.ReadRequest, resp *
 	account_name := account.AccountName.ValueString()
 	account_title := account.AccountTitle.ValueString()
 	account_type := account.AccountType.ValueString()
+	ticket_id := account.TicketID.ValueString()
+	reason := account.Reason.ValueString()
+	if account_id == 0 && account_name == "" && account_title == "" {
+		resp.Diagnostics.AddError(
+			"Invalid Input",
+			"At least one of account_id, account_name, or account_title must be provided.",
+		)
+		return
+	}
 	var data AccountModel
 	var code int
 	var message string
-	data, code, message = get_account(ctx, account_id, account_name, account_title, account_type)
+	data, code, message = get_account(ctx, account_id, account_name, account_title, account_type, ticket_id, reason)
 	if code != 200 {
 		resp.Diagnostics.AddWarning(fmt.Sprintf("%d - %s", code, message), "")
 		return
@@ -114,10 +133,12 @@ func (d *Account) Read(ctx context.Context, req datasource.ReadRequest, resp *da
 	account_name := account.AccountName.ValueString()
 	account_title := account.AccountTitle.ValueString()
 	account_type := account.AccountType.ValueString()
+	ticket_id := account.TicketID.ValueString()
+	reason := account.Reason.ValueString()
 	var data AccountModel
 	var code int
 	var message string
-	data, code, message = get_account(ctx, account_id, account_name, account_title, account_type)
+	data, code, message = get_account(ctx, account_id, account_name, account_title, account_type, ticket_id, reason)
 	if code != 200 {
 		resp.Diagnostics.AddWarning(fmt.Sprintf("%d - %s", code, message), "")
 		return

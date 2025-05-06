@@ -59,20 +59,21 @@ func isValidURL(input string) bool {
 		return false
 	}
 
-	host, portStr, found := strings.Cut(parsedURL.Host, ":")
-	if !found || host == "" || portStr == "" {
-		return false
-	}
+	host := parsedURL.Hostname()
+	portStr := parsedURL.Port()
 
-	port, err := strconv.Atoi(portStr)
-	if err != nil || port < 1 || port > 65535 {
-		return false
+	if portStr != "" {
+		port, err := strconv.Atoi(portStr)
+		if err != nil || port < 1 || port > 65535 {
+			return false
+		}
 	}
 
 	hostnameRegex := `^(localhost|([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}|(\d{1,3}\.){3}\d{1,3})$`
 	matched, _ := regexp.MatchString(hostnameRegex, host)
 	return matched
 }
+
 
 func isValidPEMFile(filePath string) bool {
 	if filePath == "" || strings.ToLower(filePath) == "none" {
@@ -304,7 +305,7 @@ func raise_request(params map[string]any, apiURL string, method string) ([]byte,
 	return body, nil
 }
 
-func get_account(ctx context.Context, account_id int64, account_name, account_title, account_type string) (AccountModel, int, string) {
+func get_account(ctx context.Context, account_id int64, account_name, account_title, account_type, ticket_id, reason string) (AccountModel, int, string) {
 	var account AccountModel
 	params := make(map[string]any)
 	if account_id != 0 {
@@ -313,6 +314,8 @@ func get_account(ctx context.Context, account_id int64, account_name, account_ti
 	setParam(params, "account_name", types.StringValue(account_name))
 	setParam(params, "account_title", types.StringValue(account_title))
 	setParam(params, "account_type", types.StringValue(account_type))
+	setParam(params, "ticket_id", types.StringValue(ticket_id))
+	setParam(params, "reason", types.StringValue(reason))
 	body, err := raise_request(params, "/secretsmanagement/get_account", GET)
 	if err != nil {
 		return account, 500, fmt.Sprintf("Error in API call: %v", err)
