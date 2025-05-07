@@ -84,10 +84,10 @@ func (d *DeleteAccounts) Create(ctx context.Context, req datasource.ReadRequest,
 	params := make(map[string]any)
 	params["account_ids"] = account.AccountIDs
 	if account.Reason.ValueString() != "" {
-		params["reason"] = account.Reason
+		setParam(params, "reason", account.Reason)
 	}
 	if account.DeletePermanently.ValueBool() {
-		params["delete_permanently"] = account.DeletePermanently
+		setParam(params, "delete_permanently", account.DeletePermanently)
 	}
 	delete_accounts, code, message := delete_accounts_function(ctx, params)
 	if code != 200 && code != 0 {
@@ -103,10 +103,10 @@ func (d *DeleteAccounts) Read(ctx context.Context, req datasource.ReadRequest, r
 	params := make(map[string]any)
 	params["account_ids"] = account.AccountIDs
 	if account.Reason.ValueString() != "" {
-		params["reason"] = account.Reason
+		setParam(params, "reason", account.Reason)
 	}
 	if account.DeletePermanently.ValueBool() {
-		params["delete_permanently"] = account.DeletePermanently
+		setParam(params, "delete_permanently", account.DeletePermanently)
 	}
 	delete_accounts, code, message := delete_accounts_function(ctx, params)
 	if code != 200 && code != 0 {
