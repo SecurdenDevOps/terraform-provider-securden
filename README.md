@@ -118,14 +118,14 @@ data "securden_account" "example" {
 
 Here are some examples of how to access various credentials from the Securden data block:
 
-- **For Password:** `data.securden_account.example.["password"]`
+- **For Password:** `data.securden_account.example["password"]`
 - **For PuTTY Private Key:** `data.securden_account.example.account["putty_private_key"]`
 - **For PuTTY Passphrase:** `data.securden_account.example.account["ppk_passphrase"]`
 - **For Additional Fields:** `data.securden_account.example.account["additional-field-name"]`
 
 ```hcl
 output "example_password" {
-    value = data.securden_account.example.["password"]
+    value = data.securden_account.example["password"]
 }
 ```
 
